@@ -25,7 +25,7 @@ void Button::begin()
 /-----------------------------------------------------------------------*/
 bool Button::read()
 {
-    uint32_t ms = millis();
+    unsigned long ms = millis();
     bool pinVal = digitalRead(m_pin);
     if (m_invert) pinVal = !pinVal;
     if (ms - m_lastChange < m_dbTime)
@@ -80,12 +80,12 @@ bool Button::wasReleased()
  * time in milliseconds. Returns false (0) or true (!=0) accordingly.   *
  * These functions do not cause the button to be read.                  *
  *----------------------------------------------------------------------*/
-bool Button::pressedFor(uint32_t ms)
+bool Button::pressedFor(unsigned long ms)
 {
     return m_state && m_time - m_lastChange >= ms;
 }
 
-bool Button::releasedFor(uint32_t ms)
+bool Button::releasedFor(unsigned long ms)
 {
     return !m_state && m_time - m_lastChange >= ms;
 }
@@ -94,7 +94,16 @@ bool Button::releasedFor(uint32_t ms)
  * lastChange() returns the time the button last changed state,         *
  * in milliseconds.                                                     *
  *----------------------------------------------------------------------*/
-uint32_t Button::lastChange()
+unsigned long Button::lastChange()
 {
     return m_lastChange;
+}
+
+unsigned long Button::pressedDuration()
+{
+    if (m_state) {
+        return m_time - m_lastChange;
+    } else {
+        return 0;
+    }
 }

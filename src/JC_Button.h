@@ -20,7 +20,7 @@ class Button
         // dbTime   Debounce time in milliseconds (default 25ms)
         // puEnable true to enable the AVR internal pullup resistor (default true)
         // invert   true to interpret a low logic level as pressed (default true)
-        Button(uint8_t pin, uint32_t dbTime=25, uint8_t puEnable=true, uint8_t invert=true)
+        Button(uint8_t pin, unsigned long dbTime=25, uint8_t puEnable=true, uint8_t invert=true)
             : m_pin(pin), m_dbTime(dbTime), m_puEnable(puEnable), m_invert(invert) {}
 
         // Initialize a Button object and the pin it's connected to
@@ -49,26 +49,28 @@ class Button
 
         // Returns true if the button state at the last call to read() was pressed,
         // and has been in that state for at least the given number of milliseconds.
-        bool pressedFor(uint32_t ms);
+        bool pressedFor(unsigned long ms);
 
         // Returns true if the button state at the last call to read() was released,
         // and has been in that state for at least the given number of milliseconds.
-        bool releasedFor(uint32_t ms);
+        bool releasedFor(unsigned long ms);
 
         // Returns the time in milliseconds (from millis) that the button last
         // changed state.
-        uint32_t lastChange();
+        unsigned long lastChange();
 
+        // Returns the time in milliseconds (from millis) that the button was last pressed
+        unsigned long pressedDuration();
     private:
         uint8_t m_pin;          // arduino pin number connected to button
-        uint32_t m_dbTime;      // debounce time (ms)
+        unsigned long m_dbTime;      // debounce time (ms)
         bool m_puEnable;        // internal pullup resistor enabled
         bool m_invert;          // if true, interpret logic low as pressed, else interpret logic high as pressed
         bool m_state;           // current button state, true=pressed
         bool m_lastState;       // previous button state
         bool m_changed;         // state changed since last read
-        uint32_t m_time;        // time of current state (ms from millis)
-        uint32_t m_lastChange;  // time of last state change (ms)
+        unsigned long m_time;        // time of current state (ms from millis)
+        unsigned long m_lastChange;  // time of last state change (ms)
 };
 
 // a derived class for a "push-on, push-off" (toggle) type button.
@@ -76,9 +78,9 @@ class Button
 class ToggleButton : public Button
 {
     public:
-    
+
         // constructor is similar to Button, but includes the initial state for the toggle.
-        ToggleButton(uint8_t pin, bool initialState=false, uint32_t dbTime=25, uint8_t puEnable=true, uint8_t invert=true)
+        ToggleButton(uint8_t pin, bool initialState=false, unsigned long dbTime=25, uint8_t puEnable=true, uint8_t invert=true)
             : Button(pin, dbTime, puEnable, invert), m_toggleState(initialState) {}
 
         // read the button and return its state.
